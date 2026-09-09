@@ -9,39 +9,35 @@ struct ContentView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @State private var answer = "Ask a question, then SHAKE!"
+    @State private var hasAnswer = false
     @State private var started = Date.distantPast
+    @State private var shakeCount = 0
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(spacing: 28) {
+                VStack(spacing: 24) {
                     Text("RETRO EIGHT BALL")
                         .font(.system(.title2, design: .monospaced, weight: .bold))
                         .foregroundStyle(.cyan)
                     Text("Think of a yes-or-no question.")
                         .foregroundStyle(.white)
-                    TimelineView(.animation(paused: reduceMotion || scenePhase != .active || started == .distantPast)) { context in
-                        let elapsed = context.date.timeIntervalSince(started)
-                        let active = elapsed >= 0 && elapsed < 1.2 && !reduceMotion
-                        let angle = active ? sin(elapsed * 24) * 10 * (1 - elapsed / 1.2) : 0
-                        let glow = active ? 14 + 8 * sin(elapsed * 12) : 14
-                        ZStack {
-                            Circle().fill(.black)
-                            Circle().stroke(.cyan, lineWidth: 12)
-                                .shadow(color: .cyan.opacity(0.7), radius: glow)
-                            Text(answer)
-                                .font(.system(.title2, design: .monospaced, weight: .bold))
-                                .foregroundStyle(.green)
-                                .multilineTextAlignment(.center)
-                                .minimumScaleFactor(0.5)
-                                .padding(44)
-                        }
-                        .frame(width: min(geometry.size.width - 64, 360), height: min(geometry.size.width - 64, 360))
-                        .rotationEffect(.degrees(angle))
+                    TimelineView(.animation(minimumInterval: 1.0 / 30.0,
+                                            paused: reduceMotion || scenePhase != .active)) { context in
+                        FloatingBall(answer: hasAnswer ? answer : "SHAKE TO ASK",
+                                     size: max(160, min(geometry.size.width - 48, 380)),
+                                     elapsed: context.date.timeIntervalSince(started),
+                                     time: context.date.timeIntervalSinceReferenceDate,
+                                     reduceMotion: reduceMotion)
                     }
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("Answer")
-                    .accessibilityValue(answer)
+                    .accessibilityHidden(true)
+                    // Keep a full-size answer outside the decorative window for large text and VoiceOver.
+                    Text(answer)
+                        .font(.system(.title3, design: .monospaced, weight: .semibold))
+                        .foregroundStyle(.cyan)
+                        .multilineTextAlignment(.center)
+                        .frame(minHeight: 56)
+                        .accessibilityLabel("Answer: \(answer)")
                     Button(action: shake) {
                         Text("SHAKE!")
                             .font(.system(.title, design: .monospaced, weight: .bold))
@@ -50,7 +46,8 @@ struct ContentView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.cyan)
                     .foregroundStyle(.black)
-                    .accessibilityHint("Reveals a randomly weighted answer")
+                    .accessibilityHint("Reveals a randomly weighted answer with a haptic tap")
+                    .sensoryFeedback(.impact(weight: .heavy, intensity: 0.9), trigger: shakeCount)
                     Text("FOR FUN • SINCE THE RETRO DAYS")
                         .font(.system(.caption, design: .monospaced))
                         .foregroundStyle(.gray)
@@ -62,18 +59,108 @@ struct ContentView: View {
         }
         .background(.black)
         .preferredColorScheme(.dark)
-        .task(id: started) {
-            guard started != .distantPast else { return }
-            do {
-                try await Task.sleep(for: .milliseconds(1250))
-                started = .distantPast
-            } catch { /* A new shake replaces the pending reset. */ }
-        }
     }
 
     private func shake() {
         answer = Responses.choose()
-        started = reduceMotion ? .distantPast : Date()
+        hasAnswer = true
+        started = Date()
+        // A separate trigger produces feedback even when the same answer is chosen twice.
+        shakeCount += 1
         UIAccessibility.post(notification: .announcement, argument: answer)
+    }
+}
+
+/// An inverted triangular die face, seen through the ball's liquid-filled window.
+private struct AnswerTriangle: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            path.closeSubpath()
+        }
+    }
+}
+
+private struct FloatingBall: View {
+    let answer: String
+    let size: CGFloat
+    let elapsed: TimeInterval
+    let time: TimeInterval
+    let reduceMotion: Bool
+
+    private var reveal: Double {
+        guard !reduceMotion else { return 1 }
+        let progress = min(1, max(0, (elapsed - 0.35) / 1.8))
+        return progress * progress * (3 - 2 * progress)
+    }
+    private var shake: Double {
+        guard !reduceMotion, elapsed < 1.1 else { return 0 }
+        return sin(elapsed * 36) * 9 * pow(max(0, 1 - elapsed / 1.1), 2)
+    }
+    private var drift: Double { reduceMotion ? 0 : sin(time * 1.25) }
+
+    var body: some View {
+        ZStack {
+            // Specular highlight and shaded edge give the ball a rounded, solid shell.
+            Circle()
+                .fill(RadialGradient(colors: [Color(white: 0.25), Color(white: 0.07), .black],
+                                     center: .topLeading, startRadius: 0, endRadius: size * 0.9))
+                .overlay(Circle().stroke(.white.opacity(0.18), lineWidth: 1))
+                .shadow(color: .cyan.opacity(0.15), radius: 18, y: 8)
+            Circle()
+                .fill(.white.opacity(0.10))
+                .frame(width: size * 0.22, height: size * 0.10)
+                .blur(radius: 10)
+                .offset(x: -size * 0.19, y: -size * 0.34)
+            liquidWindow
+                .frame(width: size * 0.76, height: size * 0.76)
+        }
+        .frame(width: size, height: size)
+        .rotationEffect(.degrees(shake))
+        .offset(x: shake * 0.55)
+    }
+
+    private var liquidWindow: some View {
+        ZStack {
+            Circle().fill(RadialGradient(colors: [Color(red: 0.015, green: 0.07, blue: 0.28),
+                                                 Color(red: 0, green: 0.005, blue: 0.035)],
+                                         center: .center, startRadius: 0, endRadius: size * 0.4))
+            // The die rises from the dark liquid, becoming larger, brighter and sharper.
+            triangle
+                .scaleEffect(0.65 + 0.35 * reveal)
+                .rotation3DEffect(.degrees((1 - reveal) * 48 + drift * 2), axis: (x: 1, y: 0.3, z: 0))
+                .rotationEffect(.degrees((1 - reveal) * -18 + drift * 1.5))
+                .offset(x: drift * 2, y: (1 - reveal) * size * 0.12 + drift * 3 + size * 0.035)
+                .blur(radius: (1 - reveal) * 7)
+                .opacity(reveal)
+            // Soft glass reflection stays above the floating face.
+            Circle().fill(LinearGradient(colors: [.white.opacity(0.10), .clear, .clear],
+                                         startPoint: .topLeading, endPoint: .bottomTrailing))
+        }
+        .clipShape(Circle())
+        .overlay(Circle().stroke(Color(white: 0.20), lineWidth: 8))
+        .overlay(Circle().stroke(.cyan.opacity(0.30), lineWidth: 1))
+    }
+
+    private var triangle: some View {
+        ZStack(alignment: .top) {
+            AnswerTriangle()
+                .fill(LinearGradient(colors: [Color(red: 0.14, green: 0.42, blue: 0.95),
+                                             Color(red: 0.025, green: 0.10, blue: 0.40)],
+                                     startPoint: .top, endPoint: .bottom))
+            AnswerTriangle().stroke(.cyan.opacity(0.75), lineWidth: 1.5)
+            Text(answer.uppercased())
+                .font(.system(size: size * 0.044, weight: .bold, design: .monospaced))
+                .foregroundStyle(Color(red: 0.82, green: 0.96, blue: 1))
+                .multilineTextAlignment(.center)
+                .lineLimit(3)
+                .minimumScaleFactor(0.65)
+                .frame(width: size * 0.29, height: size * 0.16)
+                .padding(.top, size * 0.035)
+        }
+        .frame(width: size * 0.55, height: size * 0.47)
+        .shadow(color: .blue.opacity(0.65), radius: 12)
     }
 }

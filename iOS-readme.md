@@ -1,7 +1,8 @@
 # Retro Eight Ball for iOS
 
 A native SwiftUI port of Jeff Geissler's Java eight ball, for **iOS/iPadOS 17+**.
-It preserves the original weighted answers, neon colors, and wobble/glow effect.
+It preserves the original weighted answers with a glossy black ball, blue liquid
+window, and floating triangular answer face.
 
 ## Open and run
 
@@ -33,9 +34,17 @@ swiftc ios/RetroEightBall/Responses.swift tests/ios/main.swift -o /tmp/retro-res
 
 ## Behavior and accessibility
 
-The answer is announced to VoiceOver. Text scales and the screen scrolls for
-smaller windows. Reduce Motion disables the wobble/glow animation. Animation
-updates pause when the app is inactive and stop after the effect finishes.
+Each tap gives a short, heavy haptic impact on supported iPhones, shakes the
+shell, and lets the triangular answer rise out of the dark liquid into focus.
+The face gently bobs and tilts after settling. Repeated taps restart the reveal,
+and haptics trigger even when the same answer is chosen twice. Haptic feedback
+must be checked on a physical iPhone; the simulator cannot reproduce the feel.
+
+The answer is announced to VoiceOver and repeated below the ball at a readable,
+scalable size. The screen scrolls for smaller windows. Reduce Motion disables
+all movement and blur transitions, showing the answer immediately; haptics remain
+available. Animation updates pause when the app is inactive and otherwise run
+at a maximum of 30 frames per second for the gentle floating effect.
 The answer remains while the view is active; it resets when the app is relaunched.
 
 No third-party packages, networking, personal data storage, or sensor permissions.
@@ -47,9 +56,12 @@ add your app icon, configure signing and your App Store Connect record, test on
 devices, and complete Apple's submission requirements.
 
 Suggested manual checks: repeated taps, every long answer, landscape, iPad split
-view, larger text sizes, VoiceOver, Reduce Motion, and background/foreground.
-The initial simulator build and exhaustive Swift answer test passed locally;
-hands-on simulator/device interaction has not yet been verified.
+view, larger text sizes, VoiceOver, Reduce Motion, background/foreground, and
+haptics on a physical iPhone.
+The updated simulator build passed and its initial screen was visually checked
+on an iPhone 17 Pro simulator. The original exhaustive Swift answer test passed;
+the response model is unchanged. The animation interaction, accessibility settings,
+and physical-device haptic feel still need hands-on testing.
 
 See [README.md](README.md) for probabilities and the [MIT License](LICENSE).
 Reduce Motion uses Apple's [accessibilityReduceMotion](https://developer.apple.com/documentation/swiftui/environmentvalues/accessibilityreducemotion) setting.

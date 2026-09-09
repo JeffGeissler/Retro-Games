@@ -7,7 +7,8 @@ Games I wrote in the early 2000s, modernized for smartphones (iOS and Android).
 Jeff Geissler's Java Magic 8 Ball, now an open-source collection of three native
 apps. Think of a yes-or-no question and press **SHAKE!** to reveal an answer,
 with a neon cyan ball, green lettering, and a short wobble and glow animation.
-The Android port uses a fading pulse for its glow effect. The mobile versions
+The iOS version adds a glossy shell, a floating triangular answer in blue liquid,
+and a haptic tap on SHAKE. The Android port uses a fading pulse for its glow effect. The mobile versions
 use a button; physically shaking the phone is not required or implemented.
 
 | Version | Source | Instructions |
