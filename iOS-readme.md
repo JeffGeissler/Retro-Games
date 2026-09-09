@@ -47,12 +47,14 @@ available. Animation updates pause when the app is inactive and otherwise run
 at a maximum of 30 frames per second for the gentle floating effect.
 The answer remains while the view is active; it resets when the app is relaunched.
 
-No third-party packages, networking, personal data storage, or sensor permissions.
+No third-party packages, gameplay networking, personal data storage, or sensor permissions.
+The About & Help screen links to the public privacy/support pages and opens your
+email app to contact support. These external services require a connection.
 
 ## Distribution and testing
 
 The simulator build is not an installable App Store release. Before distributing,
-configure signing and your App Store Connect record, test on
+enable the privacy/support website, configure signing and your App Store Connect record, test on
 devices, and complete Apple's submission requirements.
 
 Suggested manual checks: repeated taps, every long answer, landscape, iPad split
@@ -72,3 +74,17 @@ The included 1024 × 1024 opaque icon is configured in `Assets.xcassets/AppIcon.
 for both Debug and Release builds. Xcode generates the required device sizes.
 The artwork was created with the built-in image-generation tool; see
 [the design prompt](design/app-icon-prompt.md).
+
+## Privacy and support website
+
+The static site is in `docs/`. In GitHub, go to this repository's **Settings → Pages**,
+choose **Deploy from a branch**, select **main** and **/docs**, then **Save**.
+Wait for the Pages deployment to succeed before using these URLs in App Store Connect:
+
+- Privacy Policy URL: https://jeffgeissler.github.io/Retro-Games/privacy/
+- Support URL: https://jeffgeissler.github.io/Retro-Games/support/
+
+These same URLs are wired into the app's **About & Help** screen. Support email:
+`scale.with.jeff@outlook.com`. Verify both URLs load publicly after enabling Pages.
+The privacy page distinguishes offline gameplay from voluntary support emails and
+GitHub Pages hosting logs. Keep it updated if the app's data practices change.

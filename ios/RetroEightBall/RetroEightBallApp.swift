@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var hasAnswer = false
     @State private var started = Date.distantPast
     @State private var shakeCount = 0
+    @State private var showingHelp = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -23,7 +24,7 @@ struct ContentView: View {
                     Text("Think of a yes-or-no question.")
                         .foregroundStyle(.white)
                     TimelineView(.animation(minimumInterval: 1.0 / 30.0,
-                                            paused: reduceMotion || scenePhase != .active)) { context in
+                                            paused: reduceMotion || scenePhase != .active || showingHelp)) { context in
                         FloatingBall(answer: hasAnswer ? answer : "SHAKE TO ASK",
                                      size: max(160, min(geometry.size.width - 48, 380)),
                                      elapsed: context.date.timeIntervalSince(started),
@@ -48,6 +49,11 @@ struct ContentView: View {
                     .foregroundStyle(.black)
                     .accessibilityHint("Reveals a randomly weighted answer with a haptic tap")
                     .sensoryFeedback(.impact(weight: .heavy, intensity: 0.9), trigger: shakeCount)
+                    Button { showingHelp = true } label: {
+                        Label("About & Help", systemImage: "info.circle")
+                            .frame(minHeight: 44)
+                    }
+                    .tint(.cyan)
                     Text("FOR FUN • SINCE THE RETRO DAYS")
                         .font(.system(.caption, design: .monospaced))
                         .foregroundStyle(.gray)
@@ -59,6 +65,7 @@ struct ContentView: View {
         }
         .background(.black)
         .preferredColorScheme(.dark)
+        .sheet(isPresented: $showingHelp) { AboutHelpView() }
     }
 
     private func shake() {
@@ -68,6 +75,44 @@ struct ContentView: View {
         // A separate trigger produces feedback even when the same answer is chosen twice.
         shakeCount += 1
         UIAccessibility.post(notification: .announcement, argument: answer)
+    }
+}
+
+private struct AboutHelpView: View {
+    @Environment(\.dismiss) private var dismiss
+    private let privacyURL = URL(string: "https://jeffgeissler.github.io/Retro-Games/privacy/")!
+    private let supportURL = URL(string: "https://jeffgeissler.github.io/Retro-Games/support/")!
+    private let emailURL = URL(string: "mailto:scale.with.jeff@outlook.com?subject=Retro%20Eight%20Ball%20Support")!
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section("Retro Eight Ball") {
+                    Text("By Jeff Geissler")
+                    Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
+                        .foregroundStyle(.secondary)
+                }
+                Section("Privacy") {
+                    Text("The game works offline. It does not collect or transmit personal data, questions, or answers. Opening help pages or sending email uses external services.")
+                    Link(destination: privacyURL) { Label("Privacy Policy", systemImage: "hand.raised") }
+                }
+                Section("Support") {
+                    Link(destination: supportURL) { Label("Help & Support", systemImage: "questionmark.circle") }
+                    Link(destination: emailURL) { Label("Email Support", systemImage: "envelope") }
+                    Text("scale.with.jeff@outlook.com")
+                        .textSelection(.enabled)
+                        .font(.footnote)
+                    Text("If an email app is not configured, copy the address and contact us from your preferred email service.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .navigationTitle("About & Help")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            .tint(.cyan)
+        }
+        .preferredColorScheme(.dark)
     }
 }
 

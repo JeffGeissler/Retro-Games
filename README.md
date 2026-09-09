@@ -17,7 +17,8 @@ use a button; physically shaking the phone is not required or implemented.
 | iPhone and iPad (SwiftUI) | [ios/](ios/) | [iOS-readme.md](iOS-readme.md) |
 | Android (Java) | [android/](android/) | [androidOS-readme.md](androidOS-readme.md) |
 
-All three work offline, with no accounts, ads, analytics, or network calls.
+All three games work offline, with no accounts, ads, analytics, or gameplay network calls.
+The iOS About & Help screen opens external privacy/support pages and an email link.
 
 ## Run the desktop app
 
