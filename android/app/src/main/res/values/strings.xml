@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Retro Eight Ball</string>
+    <string name="title">RETRO EIGHT BALL</string>
+    <string name="prompt">Think of a yes-or-no question.</string>
+    <string name="initial_answer">Ask a question, then SHAKE!</string>
+    <string name="shake">SHAKE!</string>
+    <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:colorAccent">#00FFFF</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowBackground">#000000</item>
+    </style>
+</resources>
