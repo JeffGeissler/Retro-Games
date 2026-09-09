@@ -52,7 +52,7 @@ No third-party packages, networking, personal data storage, or sensor permission
 ## Distribution and testing
 
 The simulator build is not an installable App Store release. Before distributing,
-add your app icon, configure signing and your App Store Connect record, test on
+configure signing and your App Store Connect record, test on
 devices, and complete Apple's submission requirements.
 
 Suggested manual checks: repeated taps, every long answer, landscape, iPad split
@@ -65,3 +65,10 @@ and physical-device haptic feel still need hands-on testing.
 
 See [README.md](README.md) for probabilities and the [MIT License](LICENSE).
 Reduce Motion uses Apple's [accessibilityReduceMotion](https://developer.apple.com/documentation/swiftui/environmentvalues/accessibilityreducemotion) setting.
+
+## App icon
+
+The included 1024 × 1024 opaque icon is configured in `Assets.xcassets/AppIcon.appiconset`
+for both Debug and Release builds. Xcode generates the required device sizes.
+The artwork was created with the built-in image-generation tool; see
+[the design prompt](design/app-icon-prompt.md).
