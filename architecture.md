@@ -112,7 +112,8 @@ The following paths are a future layout, not files created by this design:
 | python/would_you_like_to_play/ | Isolated Python application root |
 | .../application/ | Session controller, commands, registry |
 | .../domain/ | Shared contracts, actions, outcomes, events |
-| .../games/ | Separate tic tac toe, chess, checkers, planetary modules |
+| .../games/ | Registered foundation and expansion game modules |
+| .../narrative/ | Optional story director, clue graph, journal, content validation |
 | .../opponents/ | Search and external-engine adapters |
 | .../presentation/ | Qt shell and theme-specific views |
 | .../audio/ | Speech adapters, mixer/controller, cache |
@@ -132,10 +133,10 @@ Each registered game declares:
 - Application of an action or resolution of a simultaneous round.
 - Outcome: ongoing, win/loss, draw, shared victory, or shared loss where supported.
 - Validated serialization and deserialization.
-- Presentation data independent of Qt.
-- Capabilities such as hints, undo, analysis, or simultaneous turns.
+- Player-specific presentation data independent of Qt; hidden information stays in authoritative state.
+- Capabilities such as hints, undo, analysis, player count, observations, and alternating, simultaneous, narrative, or fixed-tick sessions.
 
-Prefer immutable snapshots or controlled copies at boundaries. An accepted action is the only path to a state transition. Reject invalid actions without partial mutation.
+Prefer immutable snapshots or controlled copies at boundaries. An accepted action or declared simulation tick is the only path to a game-state transition. Reject invalid actions without partial mutation.
 
 Alternating games use player-turn and computer-turn states. The planetary game uses commit, reveal, and resolve states; do not force it through alternating moves. UI themes consume the same snapshot.
 
@@ -222,6 +223,99 @@ No policy may inspect the player's current hidden action. Resolution must not de
 
 An optional Explore Outcomes mode runs seeded computer-versus-computer matches and reports survival, shared wins, and collapse. Report observed results without claiming a strategy is proven optimal. Balance work should check for endless defense and dominant single-action strategies.
 
+## Expanded catalog and game design
+
+The [expanded catalog in README.md](README.md#expanded-creative-catalog) is part of the planned product scope. Preserve all proposed games while delivering them in stages. The first creative expansion is Ghost in the Modem, Protocol Zero, and First Contact; the original four-game foundation remains the first release.
+
+Each game must have a small rules/design sheet before coding: core loop, allowed information, actions, outcome or completion condition, difficulty, save boundary, and terminal/modern presentation. The following are initial design directions, not complete balanced rules.
+
+| Game | Core loop and completion | Algorithm / design direction |
+| --- | --- | --- |
+| Falken's Labyrinth | Explore, collect keys, navigate shifts, reach an exit or beat a rival | Seeded graph generation; BFS/A* on the opponent's known map; validate solvability after shifts |
+| Ghost in the Modem | Read fictional BBS messages, connect clues, unlock local archives, resolve a case | Authored narrative graph, inventory, prerequisites, graded hints; virtual files only |
+| Dead Letter Office | Inspect, hypothesize, decode, submit a message | Seeded cipher puzzles and constraint-based hints; verify intended solutions |
+| Starship Captain | Choose a destination, allocate crew, negotiate encounters, finish an expedition | Turn-based graph exploration, seeded events, utility-based rival captain |
+| The Last Colony | Allocate resources, resolve a day, react to hazards, survive a scenario | Bounded resource simulation and utility policies; competitive or cooperative scenarios |
+| First Contact | Send a symbol sequence, observe a response, infer meaning, complete communication tasks | Seeded finite grammar/lexicon and authored semantic rules; hints resolve ambiguity |
+| Paradox Engine | Act, send a limited message to an earlier checkpoint, replay, satisfy an objective | Versioned timeline branches and deterministic replay; explicitly define causal rules |
+| Black Box | Submit probes, compare outputs, predict results or identify a rule | Finite rule grammar and bounded hypothesis search; user-created rules use a safe editor |
+| Orbital Salvage | Bid, equip a craft, explore a wreck, bank recoveries | Seeded loot/events and utility bidders; define bankruptcy and expedition limits |
+| The Impossible Auction | Receive private values, bid, resolve item effects, compare final utility | Hidden-information agents, budgets, declared auction rules, seeded effects |
+| Dungeon on Drive B: | Explore, equip, fight, recover an objective, escape | Turn-based map generation, validated routes, finite-state monster tactics |
+| Paperclip Republic | Choose production/investments, resolve a market cycle, meet an absurd objective | Bounded economic model, scripted events, competing utility policies |
+| Memory Leak | Observe, choose a board action, lose visibility, complete a scenario | Separate observation history and bounded-memory policy; define board rules before coding |
+| Protocol Zero | Commit short robot programs, reveal, resolve steps, reach or control objectives | Simultaneous programming, bounded search/rollouts, explicit collision and tie rules |
+| The Unwinnable Game | Experiment, find evidence, reinterpret a goal, complete a discoverable alternate objective | Authored scenario state machines; stable hidden rules, graded hints, no arbitrary rule changes |
+
+### Classic variants and remaining candidates
+
+| Game / variant | Initial design direction |
+| --- | --- |
+| Midnight Blackjack | Standard blackjack with a published house ruleset and fictional chips; ORBIT is dealer |
+| Chess Against Yesterday | Chess variant mode using disclosed local style statistics to bias legal engine choices; opt-in profile, inspect/reset controls; no claim of exact personal imitation |
+| Solitaire: Lost Transmission | Specify a solitaire variant, legal deals and hints; optional narrative fragments and later same-deal challenge |
+| Gin Rummy | Published ruleset, hand evaluation, observation-limited opponent |
+| Hearts | Four seats, three distinct policies, explicit passing/scoring rules |
+| Bridge | Four seats with computer partner/opponents; select a bidding convention and scoring format before implementation |
+| Poker | Choose one variant, betting limits and showdown rules; fictional chips and private-hand isolation |
+| Starfighter Duel | Stylized space arena with fixed simulation ticks, pause/resume, textual tactical display and graphical view |
+| Four in Orbit | Connect Four style grid with bounded search and terminal/graphical boards |
+| Signal Breaker | Code-setting and deduction roles, finite candidate elimination |
+| Asteroid Nim | Specify normal or misère rules; mathematical opponent and optional explanation |
+| Orbital Reversi | Legal flipping/capture rules and positional search |
+
+These designs may reuse suitable libraries after API, rule, maintenance, and license checks. Small original mechanics can use standard-library collections, heapq, random, and explicit state machines. Do not adopt an unverified package just to avoid implementing a small rule system.
+
+## Architecture extensions for the creative catalog
+
+### Session models and observations
+
+Extend game capabilities to declare alternating, simultaneous, narrative, or fixed-tick play; player count; solo/cooperative/competitive roles; hidden information; and save boundaries. Avoid imposing a two-player alternating-board contract on the entire catalog.
+
+The authoritative rules layer owns complete state. Views, narration, hints, and opponent policies receive player-specific observations. Hidden cards, unseen maze cells, alien meanings, and unrevealed programs must not leak through logs, captions, hints, or modern UI tooltips. An opponent may have scenario-defined knowledge only when the rules disclose it. Memory Leak additionally restricts retained opponent observations rather than merely hiding data at rendering time.
+
+Narrative games consume validated choices or application commands. ORBIT may be a guide, dealer, environment, collaborator, or multiple opponents; a computer adversary is not compulsory for every game.
+
+Starfighter Duel is a later fixed-tick capability: advance simulation through controlled tick transitions, render independently, suspend ticks on pause, and save only at safe paused checkpoints. Keyboard controls and an accessible textual tactical mode need explicit prototyping; graphical fidelity alone does not satisfy terminal-mode support.
+
+### Optional story director
+
+Add a story director alongside the dialogue director. It consumes semantic, spoiler-safe events such as scenario_completed or clue_discovered and maintains a versioned local narrative profile. It does not modify a game's legal moves, opponent information, or base availability.
+
+Store authored story content as validated data with stable clue IDs, prerequisites, optional dialogue, and explicit effects. Evaluate prerequisites deterministically and grant each discovery idempotently. Verify that clue graphs are reachable and do not require playing every game.
+
+Story premise: an unfinished tournament, a missing opponent, and a message dated tomorrow gradually reveal ORBIT's history. All implemented base games remain selectable. Unlock only optional scenarios and dialogue. Provide story-off, spoiler-aware journal, replay clue, and separate story reset controls. Story reset must not delete match saves; resetting a match must not erase story progress.
+
+The story director uses authored templates/state machines and works offline. Fictional BBS messages, “corrupted files,” transmissions, and espionage are in-game data; Ghost in the Modem never browses actual personal files or contacts remote systems.
+
+### Persistence and reproducibility extensions
+
+Persist campaign flags, discovered clue IDs, content version, generated world seeds, opponent persona state, and timeline branch data where relevant. Separate local profile history from individual matches. Chess Against Yesterday profiling is opt-in, local, disclosed, and resettable.
+
+Define save checkpoints per game: completed turns, completed simultaneous rounds, narrative choices, or paused simulation snapshots. Narrative and procedural games must reproduce their world and clue state after loading. Different themes receive equivalent observations and cannot reveal extra clues.
+
+### Delivery stages
+
+1. Foundation: original four games, audio, persistence, themes, and cancellation.
+2. Creative identity: Ghost in the Modem, Protocol Zero, First Contact, and the optional story director.
+3. Puzzle and classic depth: Falken's Labyrinth, Dead Letter Office, Black Box, Memory Leak, card/board additions and variants.
+4. Larger scenarios: Starship Captain, The Last Colony, Orbital Salvage, The Impossible Auction, Dungeon on Drive B:, Paperclip Republic, Paradox Engine, The Unwinnable Game, and Starfighter Duel.
+
+Stages 3–4 are planning groups, not a mandatory internal order. Scope one working game per implementation task; preserve the complete catalog without presenting unimplemented games as playable.
+
+### Additional verification
+
+- Generated mazes and narrative prerequisite graphs have reachable objectives.
+- Hidden information is filtered consistently for policies, views, hints, dialogue, and logs.
+- Opponent memory limits are enforced in policy state.
+- Simultaneous robot programs resolve collisions and ties independently of player processing order.
+- Alien-language tasks provide sufficient evidence for their intended solutions; equivalent valid interpretations are handled explicitly.
+- Time-travel replay and seeded worlds reproduce after save/load.
+- Duplicate events do not duplicate story rewards; story-off keeps ordinary games fully playable.
+- Profiles can be inspected/reset without deleting unrelated matches.
+- Theme changes reveal no extra information and preserve campaign progress.
+- Fixed-tick games pause without advancing timers or physics.
+
 ## Verification and delivery
 
 ### First playable slice
@@ -275,3 +369,27 @@ Use the shared brief with each prompt, then execute the numbered increments in o
 ### 6. Release readiness and extension
 
 > Finish the application against the acceptance criteria. Verify keyboard use, scaling, reduced motion, immediate mute, startup skipping, save handling, missing engines, audio recovery, and process shutdown. Package and smoke-test the current OS and state which platforms remain unverified. Add appropriate dependency/asset notices. Demonstrate extension boundaries by adding Signal Breaker with computer code-setting and code-solving roles, without game-specific branches in the shell. Keep catalog expansions beyond this scope as future work.
+
+### 7. Creative catalog contracts and optional mystery
+
+> Extend the foundation according to Architecture extensions for the creative catalog. Add observation filtering, explicit session capabilities, and the optional story director with authored local content, stable clue IDs, a spoiler-aware journal, idempotent discoveries, and independent profile reset. Keep all implemented base games available and story-off fully playable. Test hidden-information filtering across every output channel, duplicate events, reset isolation, clue reachability, and save/theme continuity. Keep remaining catalog entries clearly marked as planned.
+
+### 8. Ghost in the Modem
+
+> Build one complete original fictional BBS mystery with messages, virtual archives, an inventory, evidence-linked choices, graded hints, and a satisfying resolution. Use authored narrative data and deterministic prerequisites, not actual filesystem exploration or networking. Give ORBIT a guide role and connect optional discoveries to the story director. Implement terminal and modern presentations, save/resume, story-off behavior, and tests for reachable completion and spoiler-safe hints.
+
+### 9. Protocol Zero
+
+> Write and implement a bounded robot-programming game with short secret programs, simultaneous commitment, step-by-step reveal/resolution, and explicit movement, collision, objective, and tie rules. ORBIT uses only its permitted observations. Provide replay, both themes, legal-program validation, difficulty budgets, and round-boundary saves. Test symmetry, collisions, hidden-program isolation, deterministic replay, and stale-work cancellation.
+
+### 10. First Contact
+
+> Build an offline language-discovery game with a finite seeded alien lexicon/grammar, observable responses, and authored communication objectives. Design enough evidence to infer solutions, accept explicitly equivalent valid interpretations, and provide graded hints. ORBIT plays the alien intelligence using fixed scenario rules. Include a notebook in both themes, saves, optional story discoveries, and tests for consistency, solvability, hidden-answer isolation, and reproducibility.
+
+### 11. One additional catalog game
+
+> Implement one explicitly selected game from the expanded catalog in architecture.md. Before coding, complete its rules sheet: loop, observations, actions, outcomes, difficulty, save boundary, and both presentations. Follow that game's listed design direction and reuse existing contracts. For card games specify the exact variant; for time travel specify causal rules; for Memory Leak enforce policy memory limits; for Starfighter Duel establish fixed-tick and accessible terminal behavior. Deliver only the selected game's playable increment, tests, original content, and accurate instructions. Keep the other catalog entries planned.
+
+### 12. Creative expansion release review
+
+> Verify the expanded application against foundation and creative-catalog acceptance criteria. Check story-off, journal spoilers, hidden-information isolation, profile resets, save migrations, procedural reproducibility, theme parity, and cancellation. Confirm no base game is locked by narrative progress and no planned entry appears playable. Run relevant automated checks and manual desktop/audio checks, update actual build instructions and dependency notices, and state remaining platform limitations.
