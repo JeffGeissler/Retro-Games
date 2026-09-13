@@ -35,7 +35,41 @@ Inspired by the atmosphere of *WarGames* with Matthew Broderick, this original o
 
 The requested spelling **Galatic Thermal Nuclear War** is retained intentionally. This is an imaginary planet-versus-planet arcade board game, with invented worlds and abstract points. It must not depict real nations, Earth geography, real weapons data, or realistic military operations.
 
-Possible expansions include **Four in Orbit** (Connect Four style), **Signal Breaker** (code deduction), **Asteroid Nim**, **Orbital Reversi**, and **Solitaire: Lost Transmission**. Solitaire is solo play with optional computer hints; a same-deal computer challenge is a later option.
+### Expanded creative catalog
+
+The arcade is ORBIT's collection of experiments: familiar games, strange competitions, and mysteries about how people think. All entries below are planned designs, not implemented features. Movie atmosphere is a starting point; the mechanics and stories are original.
+
+| Game | Player experience | ORBIT's role |
+| --- | --- | --- |
+| Falken's Labyrinth | Shifting ASCII maze with doors, teleporters, and unreliable maps | Rival explorer or maze architect |
+| Ghost in the Modem | Investigate an abandoned fictional bulletin-board system through messages, puzzles, and corrupted files | Guide occasionally surprised by discoveries |
+| Dead Letter Office | Decode transmissions through substitution ciphers, patterns, and logic | Rival cryptanalyst or cryptic correspondent |
+| Starship Captain | Explore a generated galaxy, manage a peculiar crew, and negotiate first contact | Rival captain with a persistent personality |
+| The Last Colony | Sustain an outpost through equipment failures, alien weather, and resource shortages | Competing colony leader or cooperative partner |
+| First Contact | Discover an alien language through symbols, responses, and experiments | Alien intelligence with learnable rules |
+| Paradox Engine | Send a limited number of messages to previous turns to solve temporal puzzles | Rival using the same time-travel rules |
+| Black Box | Infer a machine's hidden rules by experimenting with inputs and outputs | Puzzle designer; swap roles and let ORBIT solve yours |
+| Orbital Salvage | Bid for derelict spacecraft, assemble unusual equipment, and explore wrecks | Rival who remembers public bidding habits |
+| The Impossible Auction | Bid on objects with secret values, strange powers, and consequences | Several bidders with distinct bluffing styles |
+| Dungeon on Drive B: | Short text adventures with ASCII maps, equipment, monsters, and exploration | Narrator and tactical monster controller |
+| Paperclip Republic | Absurd economic competition over office supplies, automation, and fictional corporate espionage | Rival executive with ridiculous ambitions |
+| Memory Leak | Play on a board whose previously visible regions disappear and must be remembered | Opponent with an explicit, enforced memory limit |
+| Protocol Zero | Secretly program several robot moves, then watch both plans collide | Rival planner under equal information constraints |
+| The Unwinnable Game | Apparently impossible challenges where discovering the actual objective is part of play | Learner accompanying the player's discoveries |
+
+**Classic games with personality:** Midnight Blackjack uses fictional chips in an orbital casino; Chess Against Yesterday uses a disclosed local profile of previous matches; Solitaire: Lost Transmission reveals optional story fragments. Additional card-game candidates are Gin Rummy against ORBIT, Hearts against three personalities, Bridge with computer partners/opponents, and Poker with fictional chips. Starfighter Duel is a stylized spaceship arcade candidate.
+
+Retain the earlier expansion ideas: Four in Orbit, Signal Breaker, Asteroid Nim, and Orbital Reversi. Solitaire remains solo with optional hints, with a same-deal computer challenge as a later mode. Falken's Labyrinth is a proposed original maze design, not a reconstruction of the movie's unspecified game mechanics.
+
+### The mystery connecting the arcade
+
+Every implemented base game is immediately available. Optional discoveries reveal ORBIT's history: an unfinished tournament, a missing opponent, and a message dated tomorrow. Discoveries unlock extra scenarios and dialogue, never access to ordinary play. Players can disable the story layer and replay clues in a journal.
+
+An ASCII star map can become a graphical galaxy when the theme changes; state, clues, and mechanics remain identical. ORBIT's tone evolves through authored discoveries rather than requiring online AI.
+
+> “I have added three new games. One of them may be a conversation.”
+
+**First creative expansion:** Ghost in the Modem, Protocol Zero, and First Contact. These add mystery, tactical competition, and discovery after the foundational release. The rest remain a staged catalog, not a requirement to implement everything at once.
 
 ### Proposed implementation
 
