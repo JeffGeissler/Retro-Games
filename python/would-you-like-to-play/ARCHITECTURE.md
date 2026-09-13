@@ -5,6 +5,10 @@ a PySide6 app, skippable simulated connection, catalog, terminal and modern boar
 beginner and unbeatable computers, persistent preferences, save/resume, replaceable
 speech, and verified rules and persistence. It supersedes the earlier Java-first
 hub assumption for this Python application. The earlier proposal remains historical.
+The [full ORBIT roadmap](../../architecture.md) was fetched from GitHub during
+publication. It includes further requirements beyond this implementation, including
+worker-based search and reproducible random continuation; those remain unfinished
+and are listed in the application README.
 
 ## Boundaries
 

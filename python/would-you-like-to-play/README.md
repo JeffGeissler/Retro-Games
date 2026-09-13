@@ -7,7 +7,9 @@ play as X or O, and save a game to continue later.
 
 This implements the September 13, 2026 coding request. The earlier
 [Java hub proposal](../../design/do-you-want-to-play-a-game/DESIGN.md) is a separate
-draft; no additional shared PySide6 brief was present in the workspace.
+draft. The [shared ORBIT roadmap](../../architecture.md) was retrieved from GitHub
+when integrating this increment for publication; the implementation had been built
+from the coding request before that roadmap was available locally.
 
 ## Run
 
@@ -169,6 +171,12 @@ tests/
 See [ARCHITECTURE.md](ARCHITECTURE.md) for contracts, state transitions, and extension boundaries.
 
 ## Deliberately unfinished
+
+- Broader roadmap items still pending include off-UI-thread search, reproducible
+  beginner RNG continuation across saves, self-play study mode, enhanced-retro
+  presentation, text-scaling/reduced-motion preferences, and ORBIT dialogue.
+  Current Tic Tac Toe search runs synchronously over its small finite tree;
+  beginner saves preserve the position but not future random choices.
 
 - Speech uses a silent replaceable adapter. There is no TTS engine, speech recognition,
   microphone access, voice command input, or speech preference pretending to enable them.
