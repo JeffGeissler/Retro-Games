@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "retro-play-game"
+version = "0.1.0"
+description = "An offline retro game terminal with Tic Tac Toe"
+requires-python = ">=3.9"
+dependencies = ["PySide6==6.8.3"]
+
+[project.scripts]
+retro-play = "retro_play.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

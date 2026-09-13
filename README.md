@@ -2,6 +2,29 @@
 
 Games I wrote in the early 2000s, modernized for smartphones (iOS and Android).
 
+## Would you like to play a game?
+
+The [Python / PySide6 desktop app](python/would-you-like-to-play/README.md) now
+includes a complete Tic Tac Toe experience: a skippable simulated connection,
+catalog, terminal and modern boards, beginner and unbeatable opponents, local
+preferences, and save/resume. See its README for installation, commands, tests,
+and features that remain unfinished.
+
+### Earlier hub proposal
+
+A proposed game-selection home screen for the collection. See the
+[design README](design/do-you-want-to-play-a-game/README.md),
+[design and acceptance criteria](design/do-you-want-to-play-a-game/DESIGN.md), and
+[latest update review](design/do-you-want-to-play-a-game/REVIEW.md).
+That Java/mobile hub remains a separate documentation draft; the Python app above
+implements the subsequent Tic Tac Toe request.
+
+## Retro Alien Invasion
+
+A retro arcade shooter with alien waves, three lives, and local high scores.
+Available for [Java desktop](java/space-invaders/README.md) and
+[iPhone](ios/RetroAlienInvasion/README.md), with separate launchers today.
+
 ## Retro Eight Ball
 
 Jeff Geissler's Java Magic 8 Ball, now an open-source collection of three native
