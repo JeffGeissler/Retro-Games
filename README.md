@@ -2,6 +2,53 @@
 
 Games I wrote in the early 2000s, modernized for smartphones (iOS and Android).
 
+## Would you like to play a game — planned Python desktop arcade
+
+**Status: design only.** The Python application described here has not been implemented. Its proposed features are separate from the existing games documented below. See [architecture.md](architecture.md) for module boundaries, dependencies, verification criteria, and sequential implementation prompts.
+
+Inspired by the atmosphere of *WarGames* with Matthew Broderick, this original offline arcade opens with a simulated modem connection and a mechanical computer voice asking, “Would you like to play a game?” The host is **ORBIT — Opponent Reasoning and Board Intelligence Terminal**: curious, dryly funny, and interested in how people play.
+
+### Experience
+
+- Default simulated command line: black background, green or amber text, ASCII boards, blinking cursor, and optional scanlines.
+- Short, skippable connection sequence with original dialing tones, carrier whistles, and handshake sounds. The connection is theatrical and local.
+- Original offline synthetic narration, on by default at moderate volume; immediate mute and independent voice/effects controls.
+- Enhanced retro and modern graphical themes, switchable during a match without changing state, difficulty, or history.
+- Keyboard navigation, clickable modern boards, readable text scaling, reduced motion, and persistent preferences.
+- Application commands such as `games`, `play chess`, `help`, `hint`, `save`, `resume`, `theme modern`, and `voice off`. Commands never execute an operating-system shell.
+- No account, server, online language model, or gameplay network connection required.
+
+| Mode | Appearance | Interaction |
+| --- | --- | --- |
+| Terminal (default) | Phosphor text and ASCII boards | Commands, arrows, shortcuts |
+| Enhanced retro | Pixel pieces, restrained glow, transcript | Keyboard and mouse |
+| Modern | Clean typography, graphical boards, accessible contrast | Clickable moves and command palette |
+
+### Planned games
+
+| Game | Opponent / mechanics | Signature feature |
+| --- | --- | --- |
+| Tic tac toe | Random beginner and minimax expert | ORBIT self-play study mode demonstrates optimal draws |
+| Checkers | English/American rules and bounded search | Forced captures and complete jump sequences |
+| Chess | python-chess rules with Stockfish opponent | Adjustable strength, hints, history, optional analysis |
+| Galatic Thermal Nuclear War | Fictional planets with simultaneous actions | Shared instability and cooperative or competitive outcomes |
+
+The requested spelling **Galatic Thermal Nuclear War** is retained intentionally. This is an imaginary planet-versus-planet arcade board game, with invented worlds and abstract points. It must not depict real nations, Earth geography, real weapons data, or realistic military operations.
+
+Possible expansions include **Four in Orbit** (Connect Four style), **Signal Breaker** (code deduction), **Asteroid Nim**, **Orbital Reversi**, and **Solitaire: Lost Transmission**. Solitaire is solo play with optional computer hints; a same-deal computer challenge is a later option.
+
+### Proposed implementation
+
+Python with **PySide6 Qt Widgets** for the desktop interface and **Qt Multimedia** for playback. Evaluate **eSpeak NG** for the mechanical voice, with **pyttsx3** as an optional adapter. Reuse **python-chess / Stockfish** and **pydraughts** behind isolated adapters. These are proposed dependencies, not installed or integrated features.
+
+Build a complete tic tac toe experience first, then add audio, chess, checkers, and the planetary game. Save/resume, theme switching, cancellation, and silent operation belong in the foundation.
+
+There are no Python installation or launch commands yet. Use the [implementation prompts](architecture.md#implementation-prompts) when starting development.
+
+The repository's existing [MIT license](LICENSE) remains unchanged. Future dependencies and bundled engines retain their own licenses; review distribution compatibility and update [third-party notices](THIRD_PARTY_NOTICES.md) when integrating them. In particular, python-chess and Stockfish use GPL licenses.
+
+---
+
 ## Retro Eight Ball
 
 Jeff Geissler's Java Magic 8 Ball, now an open-source collection of three native
