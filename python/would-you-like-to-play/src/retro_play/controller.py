@@ -29,7 +29,11 @@ class Controller:
         self.preferences = preferences
 
     def start(self, game_id: str = "tic-tac-toe") -> None:
-        self.session.start(game_id, self.preferences.difficulty, self.preferences.human)
+        if game_id == 'checkers':
+            self.session.start(game_id, self.preferences.checkers_difficulty, self.preferences.checkers_human)
+        else:
+            self.session.start(game_id, self.preferences.difficulty, self.preferences.human)
+        self.speech.stop()
 
     def save(self) -> None:
         self.store.save_game(self.session.snapshot())
@@ -41,6 +45,7 @@ class Controller:
         # Resume is always deliberate, even if the file was saved during play.
         if restored.phase == Phase.PLAYING:
             restored.pause()
+        self.speech.stop()
         self.session = restored
 
     def catalog(self) -> None:
@@ -48,6 +53,7 @@ class Controller:
         if self.session.game is not None:
             self.save()
         self.session.catalog()
+        self.speech.stop()
 
     def shutdown(self) -> None:
         if self.session.game is not None:
@@ -65,8 +71,15 @@ class Controller:
             return "Paused. Choose Resume when you are ready."
         if session.phase == Phase.FINISHED:
             result = session.game.outcome
-            return "A draw. Shall we play again?" if result == "draw" else (
+            reason = getattr(session.game, 'draw_reason', '')
+            return ("A draw. " + reason + ". Shall we play again?" if reason else
+                    "A draw. Shall we play again?") if result == "draw" else (
                 "You win! Shall we play again?" if result == session.human
                 else "The computer wins. Shall we play again?")
-        return "Computer is thinking…" if session.computer_pending else (
-            "Your turn (" + session.human + "). Choose an empty cell.")
+        if session.computer_pending:
+            return "Computer is thinking…"
+        if session.game_id == 'checkers':
+            return ('Your turn (' + ('Black' if session.human == 'B' else 'White') + '). ' +
+                    ('Capture required: select a complete jump chain.' if session.game.capture_required
+                     else 'Select a piece and its destination.'))
+        return "Your turn (" + session.human + "). Choose an empty cell."

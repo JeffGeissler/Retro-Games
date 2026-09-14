@@ -4,7 +4,7 @@ Games I wrote in the early 2000s, modernized for smartphones (iOS and Android).
 
 ## Would you like to play a game — Python desktop arcade
 
-**Status: Tic Tac Toe foundation implemented.** The [PySide6 application](python/would-you-like-to-play/README.md) includes a skippable simulated connection, catalog, terminal and modern boards, beginner and unbeatable opponents, persistent preferences, and save/resume. Its 19 local tests passed. Speech remains a silent replaceable interface and the broader features below remain planned. See [architecture.md](architecture.md) for the full roadmap and [implementation architecture](python/would-you-like-to-play/ARCHITECTURE.md) for the current code boundaries.
+**Status: Tic Tac Toe foundation implemented.** The [PySide6 application](python/would-you-like-to-play/README.md) includes a skippable simulated connection, catalog, terminal and modern boards, beginner and unbeatable opponents, persistent preferences, and save/resume. Original modem effects and offline narration are now implemented with Qt Multimedia, eSpeak NG, optional pyttsx3, caching, cancellation, and independent audio controls. See the [audio guide](python/would-you-like-to-play/AUDIO.md) for verified runtimes and limits; the broader features below remain planned. See [architecture.md](architecture.md) for the full roadmap and [implementation architecture](python/would-you-like-to-play/ARCHITECTURE.md) for the current code boundaries.
 
 Inspired by the atmosphere of *WarGames* with Matthew Broderick, this original offline arcade opens with a simulated modem connection and a mechanical computer voice asking, “Would you like to play a game?” The host is **ORBIT — Opponent Reasoning and Board Intelligence Terminal**: curious, dryly funny, and interested in how people play.
 
@@ -75,7 +75,7 @@ An ASCII star map can become a graphical galaxy when the theme changes; state, c
 
 ### Proposed implementation
 
-Python with **PySide6 Qt Widgets** for the desktop interface and **Qt Multimedia** for playback. Evaluate **eSpeak NG** for the mechanical voice, with **pyttsx3** as an optional adapter. Reuse **python-chess / Stockfish** and **pydraughts** behind isolated adapters. PySide6 is integrated for the Tic Tac Toe app. Audio, speech engines, chess, and checkers dependencies remain proposed.
+Python with **PySide6 Qt Widgets** for the desktop interface and **Qt Multimedia** for playback. Evaluate **eSpeak NG** for the mechanical voice, with **pyttsx3** as an optional adapter. Reuse **python-chess / Stockfish** and **pydraughts** behind isolated adapters. PySide6/Qt Multimedia and the offline speech adapters are integrated. English checkers now uses verified pydraughts 0.6.7 rules and bounded process-based search; chess remains proposed.
 
 Build a complete tic tac toe experience first, then add audio, chess, checkers, and the planetary game. Save/resume, theme switching, cancellation, and silent operation belong in the foundation.
 

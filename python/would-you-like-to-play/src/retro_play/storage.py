@@ -13,6 +13,12 @@ class Preferences:
     difficulty: str = "beginner"
     human: str = "X"
     simulate_connection: bool = True
+    muted: bool = False
+    effects_volume: int = 40
+    voice_volume: int = 50
+    speech_backend: str = "espeak-ng"
+    checkers_difficulty: str = 'intermediate'
+    checkers_human: str = 'B'
 
     def __post_init__(self) -> None:
         if self.theme not in ("terminal", "modern"):
@@ -23,6 +29,15 @@ class Preferences:
             raise ValueError("Player mark must be X or O.")
         if type(self.simulate_connection) is not bool:
             raise ValueError("Invalid connection preference.")
+        if type(self.muted) is not bool:
+            raise ValueError("Invalid mute preference.")
+        for value in (self.effects_volume, self.voice_volume):
+            if type(value) is not int or not 0 <= value <= 100:
+                raise ValueError("Volume must be between 0 and 100.")
+        if self.speech_backend not in ("espeak-ng", "pyttsx3", "silent"):
+            raise ValueError("Unknown speech backend.")
+        if self.checkers_difficulty not in ('beginner', 'intermediate', 'advanced') or self.checkers_human not in ('B', 'W'):
+            raise ValueError('Invalid checkers difficulty or side.')
 
 
 class Store:
@@ -31,7 +46,7 @@ class Store:
 
     def _read(self, name: str) -> Dict[str, Any]:
         path = self.directory / name
-        if path.stat().st_size > 65536:
+        if path.stat().st_size > (2 * 1024 * 1024 if name == 'session.json' else 65536):
             raise ValueError("The data file is too large.")
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
@@ -63,12 +78,17 @@ class Store:
         except FileNotFoundError:
             return Preferences()
         expected = {"version", "theme", "difficulty", "human", "simulate_connection"}
-        if set(data) != expected or type(data["version"]) is not int or data["version"] != 1:
+        version = data.get("version")
+        if version in (2, 3):
+            expected |= {"muted", "effects_volume", "voice_volume", "speech_backend"}
+        if version == 3:
+            expected |= {'checkers_difficulty', 'checkers_human'}
+        if set(data) != expected or type(version) is not int or version not in (1, 2, 3):
             raise ValueError("Unsupported preferences file.")
         return Preferences(**{key: value for key, value in data.items() if key != "version"})
 
     def save_preferences(self, preferences: Preferences) -> None:
-        self._write("preferences.json", {"version": 1, **asdict(preferences)})
+        self._write("preferences.json", {"version": 3, **asdict(preferences)})
 
     def save_game(self, snapshot: Dict[str, Any]) -> None:
         self._write("session.json", snapshot)

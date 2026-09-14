@@ -1,4 +1,4 @@
-# Tic Tac Toe increment architecture
+# Game terminal architecture
 
 The September 13, 2026 user request is the implementation brief for this increment:
 a PySide6 app, skippable simulated connection, catalog, terminal and modern boards,
@@ -7,7 +7,7 @@ speech, and verified rules and persistence. It supersedes the earlier Java-first
 hub assumption for this Python application. The earlier proposal remains historical.
 The [full ORBIT roadmap](../../architecture.md) was fetched from GitHub during
 publication. It includes further requirements beyond this implementation, including
-worker-based search and reproducible random continuation; those remain unfinished
+reproducible random continuation; that remains unfinished
 and are listed in the application README.
 
 ## Boundaries
@@ -55,7 +55,7 @@ No sleeps block the UI thread.
 
 ## Persistence
 
-The two JSON files have independent version-1 schemas. Saves store the engine's
+Match saves use schema version 1; preferences use version 3 with migration from versions 1 and 2. Saves store the engine's
 move history rather than accepting an arbitrary board with impossible counts or
 multiple winners. The loader rejects unknown games/versions and mismatched
 terminal phases. JSON reads are size-limited. Writes flush a temporary file and
@@ -76,12 +76,24 @@ each computer turn, checking both player assignments for any computer loss.
 ## Speech and later games
 
 Inject a `Speech` implementation into `Controller`; it has `speak(text)` and
-`stop()` methods. The default `SilentSpeech` has no side effects. The UI sends
+`stop()` methods. The app now injects AudioService, with asynchronous eSpeak NG or optional pyttsx3
+rendering and Qt playback. SilentSpeech remains the fallback/test adapter. The UI sends
 changed status text and reports adapter failures without stopping gameplay.
-A real adapter should enqueue work without blocking the UI; recognition and voice
+The audio adapter implements bounded queuing, local caching, independent volumes,
+and generation-based cancellation; see [AUDIO.md](AUDIO.md). Recognition and voice
 commands are not part of this increment.
 
 Adding another game requires an engine implementing `Game`, a registered
 `GameDefinition`, tests, and a suitable view. The current board widgets and game
-page are explicitly Tic Tac Toe-specific; this is not yet a generic board-rendering
+page provide explicit Tic Tac Toe and checkers views; this is not yet a generic board-rendering
 plugin system. Native Java/iOS games are not loaded into the Python process.
+
+## Checkers boundary
+
+`games/checkers.py` alone imports pydraughts and explicitly selects English rules.
+The immutable adapter validates full paths and replays versioned save histories.
+`opponents/checkers.py` performs bounded alpha-beta using only the adapter contract.
+`opponents/service.py` runs that search in a cancellable QProcess; the window checks
+the request token and complete session identity before applying a returned move.
+Display changes preserve both search and partial move selection. State transitions
+cancel work; timeout pauses the session. See [CHECKERS.md](CHECKERS.md).

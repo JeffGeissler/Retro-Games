@@ -1,0 +1,13 @@
+{
+  "10_save_complete.wav": "3f094504f60faee3f334749504ca5270d91f1400f28cb6c230bd2d196523e01f",
+  "04_connection_established.wav": "e7e2d8319835876a6ef46329b77739d4af8f23799be809bfda6cc854f968b0fe",
+  "11_piece_move.wav": "e40ece150450de00187538c0760367d1ca996147a09a24a8ee7d43d596e21507",
+  "02_carrier_whistle.wav": "23ca85d4b0f024cc16705e70f93a3a7b7956511889bd8ecdde1f9a65b6c5fab7",
+  "01_orbit_dial_sequence.wav": "a205dafe826fad9c4246dee43aa7981dfa9b29431a61230b83e598692ffe53c3",
+  "17_draw_stalemate.wav": "9c891f8fa80d9c4ec16ad23da3e12ebe8e892a60e718bad737e676d2d98dc5b9",
+  "03_modem_handshake.wav": "c1c0f112efdccc01664a85378a79aaa7994bb5157547cb03fcc9a67a0fcc859f",
+  "16_orbit_win.wav": "12d4b8968b2b6d96c3819b667dfa88d5cbe461921a09738eef8d8e43b7f6cc2c",
+  "15_player_win.wav": "39162220b1cbbaae6ef48f2cb03c9bbe263493a51ed7308a2fb792ed1dd7f199",
+  "06_command_accept.wav": "f5cd77de55de6a1c85a6785688c29d58e5ee6e907b1e95383e7464cf14f42c1a",
+  "07_command_error.wav": "0347a18ac83101ce17db338b27344a39ee51c7abc2d127ff937d0c5482631589"
+}

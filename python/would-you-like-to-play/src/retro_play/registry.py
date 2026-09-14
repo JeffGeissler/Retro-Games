@@ -3,6 +3,12 @@ from typing import Callable, Dict, Mapping, Any, Tuple
 
 from .contracts import Game
 from .games.tic_tac_toe import TicTacToe, choose_move
+from .games.checkers import Checkers, parse_path
+
+
+def checkers_computer_move(game, difficulty):
+    from .opponents.checkers import search
+    return tuple(search(game, difficulty)['move'])
 
 
 @dataclass(frozen=True)
@@ -13,7 +19,10 @@ class GameDefinition:
     instructions: str
     create: Callable[[], Game]
     restore: Callable[[Mapping[str, Any]], Game]
-    computer_move: Callable[[Game, str], int]
+    computer_move: Callable[[Game, str], Any]
+    parse_move: Callable[[str], Any] = int
+    players: Tuple[str, ...] = ("X", "O")
+    difficulties: Tuple[str, ...] = ("beginner", "unbeatable")
 
 
 class GameRegistry:
@@ -42,5 +51,15 @@ def default_registry() -> GameRegistry:
         "X goes first. Choose cells 1–9, left to right, top to bottom. "
         "Make three in a row, column, or diagonal to win. A full board is a draw.",
         TicTacToe, TicTacToe.restore, choose_move,
+    ))
+    registry.register(GameDefinition(
+        'checkers', 'English / American Checkers', 'Compulsory jumps. Short kings. Every move matters.',
+        'Black moves first on the 32 numbered dark squares. Men move and capture forward; kings move one '
+        'diagonal square in either direction. Captures are compulsory. Choose any complete jump chain; '
+        'the longest chain is not required. Reaching the crown row ends the turn. '
+        'Type move 9-13 or a full capture path such as move 14x23x30. '
+        'Automatic draws: threefold repetition or 40 moves per side without a capture or man move.',
+        Checkers, Checkers.restore, checkers_computer_move, parse_path,
+        ('B', 'W'), ('beginner', 'intermediate', 'advanced'),
     ))
     return registry

@@ -1,6 +1,6 @@
 # Architecture: Would you like to play a game
 
-> Full arcade roadmap. The [Tic Tac Toe foundation](python/would-you-like-to-play/README.md) is now implemented; the remaining games and audio features are planned. See [implementation architecture](python/would-you-like-to-play/ARCHITECTURE.md) for current code boundaries and limitations. This document covers the new desktop arcade, not the existing Java, iOS, or Android games.
+> Full arcade roadmap. The [Tic Tac Toe foundation](python/would-you-like-to-play/README.md) is now implemented; offline modem/narration audio and English checkers are also implemented; the remaining games and broader roadmap features are planned. See [implementation architecture](python/would-you-like-to-play/ARCHITECTURE.md) for current code boundaries and limitations. This document covers the new desktop arcade, not the existing Java, iOS, or Android games.
 
 ## Goals and scope
 

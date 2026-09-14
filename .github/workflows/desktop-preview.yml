@@ -1,0 +1,47 @@
+name: Desktop preview apps
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'python/would-you-like-to-play/**'
+      - '.github/workflows/desktop-preview.yml'
+permissions:
+  contents: read
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install ./python/would-you-like-to-play[system-voice] pyinstaller==6.16.0
+      - run: python python/would-you-like-to-play/packaging/build.py
+      - name: Verify standalone app
+        shell: pwsh
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          if ($IsMacOS) { $exe = 'build/desktop/Would You Like to Play.app/Contents/MacOS/Would You Like to Play' }
+          else { $exe = 'build/desktop/Would You Like to Play/Would You Like to Play.exe' }
+          $p = Start-Process -FilePath $exe -ArgumentList '--desktop-smoke', "$PWD/desktop-smoke.json" -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw 'Standalone app smoke test failed' }
+          $result = Get-Content desktop-smoke.json | ConvertFrom-Json
+          if (!$result.ok) { throw 'Standalone gameplay checks failed' }
+      - name: Archive Mac app preserving bundle links
+        if: runner.os == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent 'build/desktop/Would You Like to Play.app' build/desktop/Orbit-macOS.zip
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'macOS'
+        with:
+          name: Orbit-macOS-preview
+          path: build/desktop/Orbit-macOS.zip
+      - uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: Orbit-Windows-preview
+          path: build/desktop/Would You Like to Play/

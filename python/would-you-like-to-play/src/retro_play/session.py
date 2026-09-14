@@ -32,16 +32,16 @@ class Session:
             raise ValueError("Skip or finish the simulated connection first.")
         if self.phase in (Phase.PLAYING, Phase.PAUSED):
             raise ValueError("Return to catalog before starting another game.")
-        self._validate_options(difficulty, human)
         definition = self.registry.get(game_id)
+        self._validate_options(difficulty, human, definition)
         game = definition.create()
         self.game_id, self.game = game_id, game
         self.difficulty, self.human = difficulty, human
         self.phase = Phase.PLAYING
 
     @staticmethod
-    def _validate_options(difficulty: str, human: str) -> None:
-        if difficulty not in ("beginner", "unbeatable") or human not in ("X", "O"):
+    def _validate_options(difficulty: str, human: str, definition) -> None:
+        if difficulty not in definition.difficulties or human not in definition.players:
             raise ValueError("Invalid opponent or player mark.")
 
     @property
@@ -49,7 +49,7 @@ class Session:
         return (self.phase == Phase.PLAYING and self.game is not None
                 and self.game.current_player != self.human)
 
-    def move(self, cell: int) -> None:
+    def move(self, cell) -> None:
         if self.phase != Phase.PLAYING or self.game is None:
             raise ValueError("A game must be playing before you can move.")
         if self.computer_pending:
@@ -61,7 +61,12 @@ class Session:
         if not self.computer_pending:
             return
         definition = self.registry.get(self.game_id)
-        self.game = self.game.play(definition.computer_move(self.game, self.difficulty))
+        self.apply_computer_move(definition.computer_move(self.game, self.difficulty))
+
+    def apply_computer_move(self, move):
+        if not self.computer_pending:
+            raise ValueError('There is no pending computer turn.')
+        self.game = self.game.play(move)
         self._finish_if_needed()
 
     def _finish_if_needed(self) -> None:
@@ -97,8 +102,9 @@ class Session:
             raise ValueError("Invalid save file structure.")
         if type(data["version"]) is not int or data["version"] != 1:
             raise ValueError("Unsupported save version.")
-        cls._validate_options(data["difficulty"], data["human"])
-        game = registry.get(data["game_id"]).restore(data["game"])
+        definition = registry.get(data["game_id"])
+        cls._validate_options(data["difficulty"], data["human"], definition)
+        game = definition.restore(data["game"])
         try:
             phase = Phase(data["phase"])
         except (ValueError, TypeError):

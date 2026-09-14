@@ -1,9 +1,11 @@
 # Would you like to play a game?
 
 An offline PySide6 desktop game terminal with a complete single-player Tic Tac Toe
-experience. Switch between a green terminal board and a modern board without
+experience and English/American checkers. Switch between a green terminal board and a modern board without
 losing your position. Choose a beginner computer or an unbeatable opponent,
-play as X or O, and save a game to continue later.
+play as X or O, and save a game to continue later. Original modem effects and offline
+ORBIT narration now use Qt Multimedia, with eSpeak NG and optional pyttsx3 adapters.
+See [AUDIO.md](AUDIO.md) for setup, controls, runtime checks, and asset provenance.
 
 This implements the September 13, 2026 coding request. The earlier
 [Java hub proposal](../../design/do-you-want-to-play-a-game/DESIGN.md) is a separate
@@ -11,7 +13,14 @@ draft. The [shared ORBIT roadmap](../../architecture.md) was retrieved from GitH
 when integrating this increment for publication; the implementation had been built
 from the coding request before that roadmap was available locally.
 
-## Run
+## Open the desktop app
+
+For testing without Python commands, open **Would You Like to Play.app** from
+`Retro-Games/build/desktop/` in Finder. Choose **Modern** for mouse-driven boards.
+See [DESKTOP.md](DESKTOP.md) for Mac launch instructions, Windows preview builds,
+and current packaging limits.
+
+## Run from source (developers)
 
 Requires Python 3.9+ and a desktop supported by PySide6 6.8.3. This dependency
 version was exercised with Python 3.9 on macOS; Python 3.11 or 3.12 is also a
@@ -47,7 +56,7 @@ retro-play --data-dir ./build/play-game-data
 
 ## Play
 
-1. Watch the approximately two-second **simulated** connection, or select **Skip connection**.
+1. Watch the approximately four-second **simulated** connection, or select **Skip connection**.
 2. Choose the computer difficulty and your mark in the catalog. X always starts.
 3. Select **Play Tic Tac Toe**. Click a cell or type its number and press Enter.
 4. Form a row, column, or diagonal of three marks. A full board without a winner is a draw.
@@ -72,6 +81,14 @@ Native buttons support keyboard focus and activation. The modern board exposes
 row, column, and occupancy labels; the terminal offers an ASCII board and numbered
 cell buttons. **How to play** shows the rules and commands. Controls scroll when
 the window is small.
+
+## Checkers
+
+Select **Play English / American Checkers** in the catalog, or type `play checkers`. Choose
+your side and difficulty on its card. Type `moves` for legal paths, then `move 9-13`
+or a full capture path such as `move 14x23x30`. In Modern display, click the piece
+and every landing square. See [CHECKERS.md](CHECKERS.md) for rules, draw policy,
+verified pydraughts API, search limits, and save behavior.
 
 ## Commands
 
@@ -140,7 +157,9 @@ Core-only verification does not import Qt:
 python -m unittest discover -s python/would-you-like-to-play/tests -p test_core.py -v
 ```
 
-Local verification passed 19 tests, including actual Qt widgets. Coverage
+The combined local suite passed 45 tests, including actual Qt widgets and checkers workers. The audio increment
+adds subprocess, queue, cancellation, cache, asset, and physical-output checks
+described in [AUDIO.md](AUDIO.md). Coverage
 includes illegal and post-game moves; wins and draws; all human continuations
 against the unbeatable strategy as either mark (152 terminal branches as X and
 635 as O); valid and invalid save round trips; failed-write preservation;
@@ -154,8 +173,12 @@ been executed as part of this local implementation.
 ```text
 src/retro_play/
   __main__.py          CLI and QApplication entry point
+  audio/               Synthesis adapters, narration/cache service, Qt playback, assets
   contracts.py         Game protocol and replaceable Speech interface
   registry.py          Game metadata, engine factories, restore and opponent hooks
+  games/checkers.py     English-only pydraughts rules and validated replay
+  opponents/            Bounded checkers search and cancellable process transport
+  ui/checkers_board.py  ASCII and graphical full-chain selection
   games/tic_tac_toe.py  Immutable rules, replay validation, beginner and minimax AI
   session.py           Session state machine and versioned snapshots
   storage.py           Preferences and atomic JSON persistence
@@ -166,24 +189,26 @@ src/retro_play/
 tests/
   test_core.py          Rules, strategy, state and persistence tests
   test_ui.py            Real Qt interaction tests
+  test_audio.py         Audio lifecycle, synthesis, cache and asset tests
+  playback_probe.py     Isolated zero-volume physical-device smoke test
 ```
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for contracts, state transitions, and extension boundaries.
 
 ## Deliberately unfinished
 
-- Broader roadmap items still pending include off-UI-thread search, reproducible
+- Broader roadmap items still pending include off-UI-thread Tic Tac Toe search, reproducible
   beginner RNG continuation across saves, self-play study mode, enhanced-retro
-  presentation, text-scaling/reduced-motion preferences, and ORBIT dialogue.
+  presentation, text-scaling/reduced-motion preferences, and a broader ORBIT dialogue system.
   Current Tic Tac Toe search runs synchronously over its small finite tree;
   beginner saves preserve the position but not future random choices.
 
-- Speech uses a silent replaceable adapter. There is no TTS engine, speech recognition,
-  microphone access, voice command input, or speech preference pretending to enable them.
-- Tic Tac Toe is the only integrated game. Eight Ball and Alien Invasion retain
+- Offline narration is implemented; speech recognition, microphone access, voice
+  command input, and a system voice picker remain unimplemented.
+- Tic Tac Toe and English checkers are integrated. Chess and the planetary game remain unfinished. Eight Ball and Alien Invasion retain
   their existing separate Java/mobile entry points. There is no Python adapter for them.
 - No real connection, networking, multiplayer, cloud saves, multiple save slots,
-  scores across games, audio effects, packaged installers, or mobile Python builds.
+  scores across games, signed installers, automatic updates, or mobile Python builds. Standalone desktop preview packaging is implemented.
 - Automated Qt tests and rendered previews do not constitute a full native-device,
   screen-reader, or cross-platform accessibility audit. Windows and Linux have not
   been exercised locally.

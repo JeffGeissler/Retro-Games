@@ -70,7 +70,7 @@ class SessionTests(unittest.TestCase):
         self.session = Session(self.registry)
 
     def test_registry_and_state_transitions(self):
-        self.assertEqual([g.id for g in self.registry.catalog()], ["tic-tac-toe"])
+        self.assertEqual([g.id for g in self.registry.catalog()], ["tic-tac-toe", "checkers"])
         with self.assertRaises(ValueError):
             self.registry.register(self.registry.get("tic-tac-toe"))
         with self.assertRaises(ValueError):

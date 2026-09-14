@@ -5,9 +5,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "retro-play-game"
 version = "0.1.0"
-description = "An offline retro game terminal with Tic Tac Toe"
+description = "An offline retro game terminal with Tic Tac Toe and English checkers"
 requires-python = ">=3.9"
-dependencies = ["PySide6==6.8.3"]
+dependencies = ["PySide6==6.8.3", "pydraughts==0.6.7"]
+
+[project.optional-dependencies]
+system-voice = ["pyttsx3==2.99"]
+
+[tool.setuptools.package-data]
+retro_play = ["audio/assets/*.wav", "audio/assets/*.txt", "audio/assets/*.json"]
 
 [project.scripts]
 retro-play = "retro_play.__main__:main"
