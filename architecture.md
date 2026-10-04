@@ -6,7 +6,7 @@
 
 Build an offline Python desktop arcade inspired by the retro-computing atmosphere of WarGames. Default to a simulated command line, with an original modem handshake and mechanical speech. Allow players to switch to enhanced retro or modern graphical presentation without losing a match.
 
-The initial catalog comprises tic tac toe, English/American checkers, chess, and **Galatic Thermal Nuclear War**. Retain that requested spelling. The planetary game is an explicitly imaginary arcade board game with invented planets and abstract resources; exclude real-world geography, factions, weapons specifications, and operational military modeling.
+The initial catalog comprises tic tac toe, English/American checkers, chess, and **Galatic Thermal Missile War**. Retain that requested spelling. The planetary game is an explicitly imaginary arcade board game with invented planets and abstract resources; exclude real-world geography, factions, weapons specifications, and operational military modeling.
 
 Use original dialogue, sounds, and art. The original host, **ORBIT**, delivers concise event-driven observations. An online language model is unnecessary.
 
@@ -189,7 +189,7 @@ Initially save simultaneous games at completed round boundaries to avoid exposin
 
 Use atomic transactions. Validate identifiers, payload shape, bounds, and supported versions before loading. Preserve an incompatible save and explain the issue instead of silently resetting it. Define migrations only when versions actually change.
 
-## Galatic Thermal Nuclear War: provisional design
+## Galatic Thermal Missile War: provisional design
 
 Subtitle: **An imaginary planet-versus-planet arcade game.**
 
@@ -231,7 +231,7 @@ Each game must have a small rules/design sheet before coding: core loop, allowed
 
 | Game | Core loop and completion | Algorithm / design direction |
 | --- | --- | --- |
-| Falken's Labyrinth | Explore, collect keys, navigate shifts, reach an exit or beat a rival | Seeded graph generation; BFS/A* on the opponent's known map; validate solvability after shifts |
+| Folcrum's Labyrinth | Explore, collect keys, navigate shifts, reach an exit or beat a rival | Seeded graph generation; BFS/A* on the opponent's known map; validate solvability after shifts |
 | Ghost in the Modem | Read fictional BBS messages, connect clues, unlock local archives, resolve a case | Authored narrative graph, inventory, prerequisites, graded hints; virtual files only |
 | Dead Letter Office | Inspect, hypothesize, decode, submit a message | Seeded cipher puzzles and constraint-based hints; verify intended solutions |
 | Starship Captain | Choose a destination, allocate crew, negotiate encounters, finish an expedition | Turn-based graph exploration, seeded events, utility-based rival captain |
@@ -251,13 +251,10 @@ Each game must have a small rules/design sheet before coding: core loop, allowed
 
 | Game / variant | Initial design direction |
 | --- | --- |
-| Midnight Blackjack | Standard blackjack with a published house ruleset and fictional chips; ORBIT is dealer |
 | Chess Against Yesterday | Chess variant mode using disclosed local style statistics to bias legal engine choices; opt-in profile, inspect/reset controls; no claim of exact personal imitation |
 | Solitaire: Lost Transmission | Specify a solitaire variant, legal deals and hints; optional narrative fragments and later same-deal challenge |
 | Gin Rummy | Published ruleset, hand evaluation, observation-limited opponent |
 | Hearts | Four seats, three distinct policies, explicit passing/scoring rules |
-| Bridge | Four seats with computer partner/opponents; select a bidding convention and scoring format before implementation |
-| Poker | Choose one variant, betting limits and showdown rules; fictional chips and private-hand isolation |
 | Starfighter Duel | Stylized space arena with fixed simulation ticks, pause/resume, textual tactical display and graphical view |
 | Four in Orbit | Connect Four style grid with bounded search and terminal/graphical boards |
 | Signal Breaker | Code-setting and deduction roles, finite candidate elimination |
@@ -298,7 +295,7 @@ Define save checkpoints per game: completed turns, completed simultaneous rounds
 
 1. Foundation: original four games, audio, persistence, themes, and cancellation.
 2. Creative identity: Ghost in the Modem, Protocol Zero, First Contact, and the optional story director.
-3. Puzzle and classic depth: Falken's Labyrinth, Dead Letter Office, Black Box, Memory Leak, card/board additions and variants.
+3. Puzzle and classic depth: Folcrum's Labyrinth, Dead Letter Office, Black Box, Memory Leak, card/board additions and variants.
 4. Larger scenarios: Starship Captain, The Last Colony, Orbital Salvage, The Impossible Auction, Dungeon on Drive B:, Paperclip Republic, Paradox Engine, The Unwinnable Game, and Starfighter Duel.
 
 Stages 3–4 are planning groups, not a mandatory internal order. Scope one working game per implementation task; preserve the complete catalog without presenting unimplemented games as playable.
@@ -344,7 +341,7 @@ Use the shared brief with each prompt, then execute the numbered increments in o
 
 ### Shared brief
 
-> Build an offline Python desktop application named “Would you like to play a game” in an isolated python/ area of Retro-Games. Preserve existing applications and documents. Follow architecture.md. Use PySide6 Qt Widgets and Qt Multimedia, a default simulated terminal, a skippable original modem sequence, original mechanical speech, persistent independent audio controls, and a modern theme switchable during a match. The original host ORBIT uses concise event-driven dialogue. Separate game rules, sessions, opponents, presentation, audio, and persistence. Use validated local versioned saves. Keep search and speech generation off the UI thread, cancel on session changes, and reject stale results. Never execute user commands as shell input. Required games are tic tac toe, English/American checkers, chess, and the explicitly fictional planet-versus-planet Galatic Thermal Nuclear War. Verify dependency APIs, versions, licenses, and platform support before integration. Deliver working increments with focused tests and accurate run instructions.
+> Build an offline Python desktop application named “Would you like to play a game” in an isolated python/ area of Retro-Games. Preserve existing applications and documents. Follow architecture.md. Use PySide6 Qt Widgets and Qt Multimedia, a default simulated terminal, a skippable original modem sequence, original mechanical speech, persistent independent audio controls, and a modern theme switchable during a match. The original host ORBIT uses concise event-driven dialogue. Separate game rules, sessions, opponents, presentation, audio, and persistence. Use validated local versioned saves. Keep search and speech generation off the UI thread, cancel on session changes, and reject stale results. Never execute user commands as shell input. Required games are tic tac toe, English/American checkers, chess, and the explicitly fictional planet-versus-planet Galatic Thermal Missile War. Verify dependency APIs, versions, licenses, and platform support before integration. Deliver working increments with focused tests and accurate run instructions.
 
 ### 1. Foundation and tic tac toe
 
@@ -364,7 +361,7 @@ Use the shared brief with each prompt, then execute the numbered increments in o
 
 ### 5. Fictional planetary game
 
-> Implement Galatic Thermal Nuclear War as an original abstract science-fiction arcade game. First complete the provisional rules in architecture.md with explicit costs, caps, timing, resolution table, ending precedence, and round limit. Implement simultaneous commit/reveal/resolve turns with validation against the round snapshot and processing-order-independent results. Opponents may use public state and previous rounds but cannot inspect current hidden player actions. Add Cautious, Competitive, Reciprocal, and Erratic policies, seeded randomness, both visual themes, original narration, round-boundary saves, and optional outcome exploration. Test resource bounds, ending precedence, hidden-action isolation, symmetry, reproducibility, and representative balance scenarios.
+> Implement Galatic Thermal Missile War as an original abstract science-fiction arcade game. First complete the provisional rules in architecture.md with explicit costs, caps, timing, resolution table, ending precedence, and round limit. Implement simultaneous commit/reveal/resolve turns with validation against the round snapshot and processing-order-independent results. Opponents may use public state and previous rounds but cannot inspect current hidden player actions. Add Cautious, Competitive, Reciprocal, and Erratic policies, seeded randomness, both visual themes, original narration, round-boundary saves, and optional outcome exploration. Test resource bounds, ending precedence, hidden-action isolation, symmetry, reproducibility, and representative balance scenarios.
 
 ### 6. Release readiness and extension
 

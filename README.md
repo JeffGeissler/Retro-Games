@@ -33,9 +33,9 @@ Only Tic Tac Toe is currently playable in the Python app; its self-play study mo
 | Tic tac toe | Random beginner and minimax expert | ORBIT self-play study mode demonstrates optimal draws |
 | Checkers | English/American rules and bounded search | Forced captures and complete jump sequences |
 | Chess | python-chess rules with Stockfish opponent | Adjustable strength, hints, history, optional analysis |
-| Galatic Thermal Nuclear War | Fictional planets with simultaneous actions | Shared instability and cooperative or competitive outcomes |
+| Galatic Thermal Missile War | Fictional planets with simultaneous actions | Shared instability and cooperative or competitive outcomes |
 
-The requested spelling **Galatic Thermal Nuclear War** is retained intentionally. This is an imaginary planet-versus-planet arcade board game, with invented worlds and abstract points. It must not depict real nations, Earth geography, real weapons data, or realistic military operations.
+The requested spelling **Galatic Thermal Missile War** is retained intentionally. This is an imaginary planet-versus-planet arcade board game, with invented worlds and abstract points. It must not depict real nations, Earth geography, real weapons data, or realistic military operations.
 
 ### Expanded creative catalog
 
@@ -43,7 +43,7 @@ The arcade is ORBIT's collection of experiments: familiar games, strange competi
 
 | Game | Player experience | ORBIT's role |
 | --- | --- | --- |
-| Falken's Labyrinth | Shifting ASCII maze with doors, teleporters, and unreliable maps | Rival explorer or maze architect |
+| Folcrum's Labyrinth | Shifting ASCII maze with doors, teleporters, and unreliable maps | Rival explorer or maze architect |
 | Ghost in the Modem | Investigate an abandoned fictional bulletin-board system through messages, puzzles, and corrupted files | Guide occasionally surprised by discoveries |
 | Dead Letter Office | Decode transmissions through substitution ciphers, patterns, and logic | Rival cryptanalyst or cryptic correspondent |
 | Starship Captain | Explore a generated galaxy, manage a peculiar crew, and negotiate first contact | Rival captain with a persistent personality |
@@ -59,9 +59,9 @@ The arcade is ORBIT's collection of experiments: familiar games, strange competi
 | Protocol Zero | Secretly program several robot moves, then watch both plans collide | Rival planner under equal information constraints |
 | The Unwinnable Game | Apparently impossible challenges where discovering the actual objective is part of play | Learner accompanying the player's discoveries |
 
-**Classic games with personality:** Midnight Blackjack uses fictional chips in an orbital casino; Chess Against Yesterday uses a disclosed local profile of previous matches; Solitaire: Lost Transmission reveals optional story fragments. Additional card-game candidates are Gin Rummy against ORBIT, Hearts against three personalities, Bridge with computer partners/opponents, and Poker with fictional chips. Starfighter Duel is a stylized spaceship arcade candidate.
+**Classic games with personality:** Chess Against Yesterday uses a disclosed local profile of previous matches; Solitaire: Lost Transmission reveals optional story fragments. Additional card-game candidates are Gin Rummy against ORBIT and Hearts against three personalities. Starfighter Duel is a stylized spaceship arcade candidate. Bridge and casino games are no longer planned.
 
-Retain the earlier expansion ideas: Four in Orbit, Signal Breaker, Asteroid Nim, and Orbital Reversi. Solitaire remains solo with optional hints, with a same-deal computer challenge as a later mode. Falken's Labyrinth is a proposed original maze design, not a reconstruction of the movie's unspecified game mechanics.
+Retain the earlier expansion ideas: Four in Orbit, Signal Breaker, Asteroid Nim, and Orbital Reversi. Solitaire remains solo with optional hints, with a same-deal computer challenge as a later mode. Folcrum's Labyrinth is a proposed original maze design, not a reconstruction of the movie's unspecified game mechanics.
 
 ### The mystery connecting the arcade
 
